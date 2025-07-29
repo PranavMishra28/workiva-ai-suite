@@ -12,6 +12,7 @@ export const useChatStore = create<ChatStore>()(
       error: null,
       sessions: [],
       currentSessionId: null,
+      isSidebarOpen: localStorage.getItem('sidebar-open') === 'true',
 
       addMessage: message => {
         const newMessage: Message = {
@@ -116,12 +117,42 @@ export const useChatStore = create<ChatStore>()(
         }));
       },
 
+      updateMessage: (messageId: string, updates: Partial<Message>) => {
+        set(state => ({
+          messages: state.messages.map(message =>
+            message.id === messageId ? { ...message, ...updates } : message
+          ),
+          sessions: state.sessions.map(session =>
+            session.id === state.currentSessionId
+              ? {
+                  ...session,
+                  messages: session.messages.map(message =>
+                    message.id === messageId
+                      ? { ...message, ...updates }
+                      : message
+                  ),
+                  updatedAt: new Date(),
+                }
+              : session
+          ),
+        }));
+      },
+
       setLoading: loading => {
         set({ isLoading: loading });
       },
 
       setError: error => {
         set({ error, isLoading: false });
+      },
+
+      toggleSidebar: () => {
+        set(state => ({ isSidebarOpen: !state.isSidebarOpen }));
+      },
+
+      setSidebarOpen: (open: boolean) => {
+        set({ isSidebarOpen: open });
+        localStorage.setItem('sidebar-open', open.toString());
       },
     }),
     {

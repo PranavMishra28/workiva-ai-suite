@@ -1,8 +1,19 @@
+export interface FileAttachment {
+  id: string;
+  name: string;
+  type: 'image' | 'pdf' | 'other';
+  size: number;
+  url?: string; // For uploaded files
+  preview?: string; // For image previews
+}
+
 export interface Message {
   id: string;
   role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
+  attachments?: FileAttachment[];
+  isStopped?: boolean;
 }
 
 export interface ChatSession {
@@ -19,10 +30,12 @@ export interface ChatState {
   error: string | null;
   sessions: ChatSession[];
   currentSessionId: string | null;
+  isSidebarOpen: boolean;
 }
 
 export interface ChatActions {
   addMessage: (message: Omit<Message, 'id' | 'timestamp'>) => void;
+  updateMessage: (messageId: string, updates: Partial<Message>) => void;
   clearHistory: () => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
@@ -30,6 +43,8 @@ export interface ChatActions {
   loadSession: (sessionId: string) => void;
   deleteSession: (sessionId: string) => void;
   updateSessionTitle: (sessionId: string, title: string) => void;
+  toggleSidebar: () => void;
+  setSidebarOpen: (open: boolean) => void;
 }
 
 export interface DeepSeekRequest {

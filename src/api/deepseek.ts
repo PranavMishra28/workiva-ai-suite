@@ -24,7 +24,7 @@ class DeepSeekAPI {
       }
       console.log(
         'API key loaded successfully:',
-        this.apiKey.substring(0, 10) + '...'
+        `${this.apiKey.substring(0, 10)}...`
       );
     }
     return this.apiKey;
@@ -57,7 +57,7 @@ class DeepSeekAPI {
       console.log('Making request to:', `${API_BASE_URL}/chat/completions`);
       console.log('Request body:', requestBody);
       console.log('Making request with headers:', {
-        Authorization: headers.Authorization.substring(0, 20) + '...',
+        Authorization: `${headers.Authorization.substring(0, 20)}...`,
         'HTTP-Referer': headers['HTTP-Referer'],
         'X-Title': headers['X-Title'],
         'Content-Type': headers['Content-Type'],

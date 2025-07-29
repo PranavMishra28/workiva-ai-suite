@@ -1,23 +1,33 @@
 import { useRef, useEffect } from 'react';
 import { MessageBubble } from './MessageBubble';
-import { Loader } from './Loader';
+import { LoadingBubble } from './LoadingBubble';
 import { Message } from '../types';
 
 interface ChatContainerProps {
   messages: Message[];
   streamingMessage?: string;
   isLoading: boolean;
+  isStreaming: boolean;
+  isStopped?: boolean;
+  onStopStreaming: () => void;
+  onRedoStreaming?: () => void;
 }
 
 export function ChatContainer({
   messages,
   streamingMessage,
   isLoading,
+  isStreaming,
+  isStopped = false,
+  onStopStreaming,
+  onRedoStreaming,
 }: ChatContainerProps): JSX.Element {
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (chatEndRef.current) {
+      chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   useEffect(() => {
@@ -73,7 +83,7 @@ export function ChatContainer({
   }
 
   return (
-    <div className="flex-1 overflow-y-auto px-4 py-6">
+    <div className="flex-1 overflow-y-auto px-4 py-6 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
       <div className="max-w-4xl mx-auto space-y-4">
         {messages.map(message => (
           <MessageBubble key={message.id} message={message} />
@@ -100,23 +110,14 @@ export function ChatContainer({
           </div>
         )}
 
-        {isLoading && !streamingMessage && (
-          <div className="flex justify-start mb-4 animate-slide-up">
-            <div className="chat-bubble chat-bubble-ai">
-              <div className="flex items-start space-x-3">
-                <div className="w-6 h-6 bg-gradient-to-br from-primary-400 to-primary-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                  <span className="text-white text-xs font-medium">AI</span>
-                </div>
+        <LoadingBubble
+          onStop={onStopStreaming}
+          onRedo={onRedoStreaming}
+          isStreaming={isStreaming}
+          isStopped={isStopped}
+        />
 
-                <div className="flex-1 min-w-0">
-                  <Loader text="DeepSeek is thinking..." size="sm" />
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        <div ref={messagesEndRef} />
+        <div ref={chatEndRef} />
       </div>
     </div>
   );

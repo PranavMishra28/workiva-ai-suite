@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Header } from './components/Header';
 import { ChatContainer } from './components/ChatContainer';
 import { ChatInput } from './components/ChatInput';
@@ -7,17 +7,20 @@ import { HistorySidebar } from './components/HistorySidebar';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { useChat } from './hooks/useChat';
 import { useChatStore } from './store/chatStore';
+import { FileAttachment } from './types';
 
 function App(): JSX.Element {
   const [showClearModal, setShowClearModal] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const {
     messages,
     isLoading,
     error,
     streamingMessage,
+    isStreaming,
+    isStopped,
     sendMessage,
     cancelRequest,
+    redoRequest,
   } = useChat();
   const { clearHistory } = useChatStore();
 
@@ -26,7 +29,11 @@ function App(): JSX.Element {
     setShowClearModal(false);
   };
 
-  const handleSendMessage = (content: string) => {
+  const handleSendMessage = (
+    content: string,
+    _attachments?: FileAttachment[]
+  ) => {
+    // TODO: Handle attachments in sendMessage
     sendMessage(content);
   };
 
@@ -34,31 +41,45 @@ function App(): JSX.Element {
     cancelRequest();
   };
 
+  // Handle keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && isStreaming) {
+        cancelRequest();
+      }
+      if (event.key === 'R' && event.shiftKey && isStopped) {
+        redoRequest();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isStreaming, isStopped, cancelRequest, redoRequest]);
+
   return (
     <ErrorBoundary>
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex">
-        <HistorySidebar
-          isOpen={sidebarOpen}
-          onToggle={() => setSidebarOpen(!sidebarOpen)}
-        />
+        <HistorySidebar />
 
-        <div className="flex-1 flex flex-col lg:ml-0">
-          <Header
-            onClearHistory={() => setShowClearModal(true)}
-            onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
-          />
+        <div className="flex-1 flex flex-col">
+          <Header />
 
           <main className="flex-1 flex flex-col">
             <ChatContainer
               messages={messages}
               streamingMessage={streamingMessage}
               isLoading={isLoading}
+              isStreaming={isStreaming}
+              isStopped={isStopped}
+              onStopStreaming={cancelRequest}
+              onRedoStreaming={redoRequest}
             />
 
             <ChatInput
               onSendMessage={handleSendMessage}
               onCancelRequest={handleCancelRequest}
               isLoading={isLoading}
+              isStreaming={isStreaming}
               disabled={!!error}
             />
           </main>
