@@ -2,6 +2,8 @@
 
 A production-grade AI chat web application powered by DeepSeek R1 0528 (free), featuring real-time streaming responses, modern UI/UX, and robust architecture. Built with React 18, TypeScript, and Tailwind CSS, this application provides an intuitive chat interface with advanced AI capabilities.
 
+![Workiva AI Suite Chat Interface](./chat.png)
+
 ## Features
 
 - **DeepSeek R1 0528 Integration** - Powered by advanced AI technology via OpenRouter API (free tier)

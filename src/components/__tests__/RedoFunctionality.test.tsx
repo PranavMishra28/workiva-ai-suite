@@ -1,6 +1,6 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { App } from '../../App';
+import App from '../../App';
 
 // Mock the API
 vi.mock('../../api/deepseek', () => ({
