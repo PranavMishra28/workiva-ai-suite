@@ -11,11 +11,21 @@ class DeepSeekAPI {
     if (!this.apiKey) {
       this.apiKey = import.meta.env.VITE_OPENROUTER_API_KEY;
       if (!this.apiKey) {
-        console.error('Environment variable VITE_OPENROUTER_API_KEY is not set.');
-        console.error('Available environment variables:', Object.keys(import.meta.env));
-        throw new Error('OPENROUTER_API_KEY environment variable is required. Please check your .env.local file and restart the development server.');
+        console.error(
+          'Environment variable VITE_OPENROUTER_API_KEY is not set.'
+        );
+        console.error(
+          'Available environment variables:',
+          Object.keys(import.meta.env)
+        );
+        throw new Error(
+          'OPENROUTER_API_KEY environment variable is required. Please check your .env.local file and restart the development server.'
+        );
       }
-      console.log('API key loaded successfully:', this.apiKey.substring(0, 10) + '...');
+      console.log(
+        'API key loaded successfully:',
+        this.apiKey.substring(0, 10) + '...'
+      );
     }
     return this.apiKey;
   }
@@ -64,8 +74,14 @@ class DeepSeekAPI {
         const errorData: ApiError = await response.json();
         console.error('API Error Response:', errorData);
         console.error('Response Status:', response.status);
-        console.error('Response Headers:', Object.fromEntries(response.headers.entries()));
-        throw new Error(errorData.error?.message || `HTTP ${response.status}: ${response.statusText}`);
+        console.error(
+          'Response Headers:',
+          Object.fromEntries(response.headers.entries())
+        );
+        throw new Error(
+          errorData.error?.message ||
+            `HTTP ${response.status}: ${response.statusText}`
+        );
       }
 
       const reader = response.body?.getReader();

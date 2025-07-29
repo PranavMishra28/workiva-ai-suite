@@ -4,7 +4,7 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
-  darkMode: 'media',
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
@@ -53,9 +53,12 @@ export default {
           '50%': { transform: 'translateY(-5px)' },
         },
       },
-      fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-      },
+             fontFamily: {
+         sans: ['Inter', 'system-ui', 'sans-serif'],
+       },
+       width: {
+         '70': '280px',
+       },
     },
   },
   plugins: [],

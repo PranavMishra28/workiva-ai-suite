@@ -1,4 +1,3 @@
-
 import { Message } from '../types';
 
 interface MessageBubbleProps {
@@ -11,7 +10,10 @@ export function MessageBubble({
   isStreaming = false,
 }: MessageBubbleProps): JSX.Element {
   const isUser = message.role === 'user';
-  const timestamp = message.timestamp instanceof Date ? message.timestamp : new Date(message.timestamp);
+  const timestamp =
+    message.timestamp instanceof Date
+      ? message.timestamp
+      : new Date(message.timestamp);
   const formattedTime = timestamp.toLocaleTimeString([], {
     hour: '2-digit',
     minute: '2-digit',

@@ -3,12 +3,14 @@ import { Header } from './components/Header';
 import { ChatContainer } from './components/ChatContainer';
 import { ChatInput } from './components/ChatInput';
 import { ClearHistoryModal } from './components/ClearHistoryModal';
+import { HistorySidebar } from './components/HistorySidebar';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { useChat } from './hooks/useChat';
 import { useChatStore } from './store/chatStore';
 
 function App(): JSX.Element {
   const [showClearModal, setShowClearModal] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const {
     messages,
     isLoading,
@@ -34,23 +36,33 @@ function App(): JSX.Element {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
-        <Header onClearHistory={() => setShowClearModal(true)} />
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex">
+        <HistorySidebar
+          isOpen={sidebarOpen}
+          onToggle={() => setSidebarOpen(!sidebarOpen)}
+        />
 
-        <main className="flex-1 flex flex-col">
-          <ChatContainer
-            messages={messages}
-            streamingMessage={streamingMessage}
-            isLoading={isLoading}
+        <div className="flex-1 flex flex-col lg:ml-0">
+          <Header
+            onClearHistory={() => setShowClearModal(true)}
+            onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
           />
 
-          <ChatInput
-            onSendMessage={handleSendMessage}
-            onCancelRequest={handleCancelRequest}
-            isLoading={isLoading}
-            disabled={!!error}
-          />
-        </main>
+          <main className="flex-1 flex flex-col">
+            <ChatContainer
+              messages={messages}
+              streamingMessage={streamingMessage}
+              isLoading={isLoading}
+            />
+
+            <ChatInput
+              onSendMessage={handleSendMessage}
+              onCancelRequest={handleCancelRequest}
+              isLoading={isLoading}
+              disabled={!!error}
+            />
+          </main>
+        </div>
 
         <ClearHistoryModal
           isOpen={showClearModal}

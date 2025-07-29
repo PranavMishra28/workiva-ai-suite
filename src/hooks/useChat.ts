@@ -3,14 +3,28 @@ import { deepSeekAPI } from '../api/deepseek';
 import { useChatStore } from '../store/chatStore';
 
 export const useChat = () => {
-  const { messages, isLoading, error, addMessage, setLoading, setError } =
-    useChatStore();
+  const {
+    messages,
+    isLoading,
+    error,
+    addMessage,
+    setLoading,
+    setError,
+    sessions,
+    currentSessionId,
+    createSession,
+  } = useChatStore();
   const abortControllerRef = useRef<AbortController | null>(null);
   const [streamingMessage, setStreamingMessage] = useState<string>('');
 
   const sendMessage = useCallback(
     async (messageContent: string) => {
       if (!messageContent.trim()) return;
+
+      // Create session if this is the first message
+      if (!currentSessionId && sessions.length === 0) {
+        createSession(messageContent.trim().substring(0, 30));
+      }
 
       // Add user message
       addMessage({ role: 'user', content: messageContent.trim() });
@@ -35,7 +49,7 @@ export const useChat = () => {
 
       try {
         let finalStreamingMessage = '';
-        
+
         await deepSeekAPI.streamChatCompletion(
           apiMessages,
           chunk => {
@@ -71,7 +85,15 @@ export const useChat = () => {
         abortControllerRef.current = null;
       }
     },
-    [messages, addMessage, setLoading, setError, streamingMessage]
+    [
+      messages,
+      addMessage,
+      setLoading,
+      setError,
+      currentSessionId,
+      sessions,
+      createSession,
+    ]
   );
 
   const cancelRequest = useCallback(() => {

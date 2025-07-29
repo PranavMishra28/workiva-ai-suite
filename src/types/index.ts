@@ -5,10 +5,20 @@ export interface Message {
   timestamp: Date;
 }
 
+export interface ChatSession {
+  id: string;
+  title: string;
+  messages: Message[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface ChatState {
   messages: Message[];
   isLoading: boolean;
   error: string | null;
+  sessions: ChatSession[];
+  currentSessionId: string | null;
 }
 
 export interface ChatActions {
@@ -16,6 +26,10 @@ export interface ChatActions {
   clearHistory: () => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
+  createSession: (title: string) => void;
+  loadSession: (sessionId: string) => void;
+  deleteSession: (sessionId: string) => void;
+  updateSessionTitle: (sessionId: string, title: string) => void;
 }
 
 export interface DeepSeekRequest {

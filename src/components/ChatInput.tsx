@@ -46,7 +46,7 @@ export function ChatInput({
   return (
     <div className="sticky bottom-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-t border-gray-200 dark:border-gray-700 p-4">
       <div className="max-w-4xl mx-auto">
-        <div className="flex items-end space-x-3">
+        <div className="flex items-center gap-2">
           <div className="flex-1 relative">
             <textarea
               ref={textareaRef}
@@ -71,7 +71,7 @@ export function ChatInput({
             type="button"
             onClick={isLoading ? onCancelRequest : handleSubmit}
             disabled={(!message.trim() && !isLoading) || disabled}
-            className={`btn-primary flex items-center space-x-2 min-w-[44px] h-[44px] ${
+            className={`btn-primary flex items-center justify-center min-w-[44px] h-[44px] ${
               isLoading ? 'bg-red-600 hover:bg-red-700' : ''
             }`}
             aria-label={isLoading ? 'Cancel request' : 'Send message'}

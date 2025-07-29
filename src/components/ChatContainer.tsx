@@ -1,5 +1,6 @@
 import { useRef, useEffect } from 'react';
 import { MessageBubble } from './MessageBubble';
+import { Loader } from './Loader';
 import { Message } from '../types';
 
 interface ChatContainerProps {
@@ -108,17 +109,7 @@ export function ChatContainer({
                 </div>
 
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-primary-500 rounded-full animate-bounce" />
-                    <div
-                      className="w-2 h-2 bg-primary-500 rounded-full animate-bounce"
-                      style={{ animationDelay: '0.1s' }}
-                    />
-                    <div
-                      className="w-2 h-2 bg-primary-500 rounded-full animate-bounce"
-                      style={{ animationDelay: '0.2s' }}
-                    />
-                  </div>
+                  <Loader text="DeepSeek is thinking..." size="sm" />
                 </div>
               </div>
             </div>
